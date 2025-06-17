@@ -2,3 +2,13 @@ import java.util.*
 
 class Player{
 
+String playerName;
+int wins;
+int draws;
+int losses;
+1. Atributo playerName (String): Nombre del jugador, usado como identificador único.
+2. Atributo wins (int): Número de partidas ganadas por el jugador.
+3. Atributo draws (int): Número de partidas empatadas por el jugador.
+4. Atributo losses (int): Número de partidas perdidas por el jugador
+
+public class Player
