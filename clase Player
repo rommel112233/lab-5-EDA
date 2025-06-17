@@ -6,9 +6,31 @@ String playerName;
 int wins;
 int draws;
 int losses;
-1. Atributo playerName (String): Nombre del jugador, usado como identificador único.
-2. Atributo wins (int): Número de partidas ganadas por el jugador.
-3. Atributo draws (int): Número de partidas empatadas por el jugador.
-4. Atributo losses (int): Número de partidas perdidas por el jugador
 
-public class Player
+public Player(String playerName, int wins, int draws, int losses){
+  this.playerName = playerName;
+  this.wins = wins;
+  this.draws = draws;
+  this.losses = losses;
+}
+
+public void addWin(){
+  wins++;
+}
+public void addDraw(){
+  draws++;
+}
+public void addLoss(){
+  losses++;
+}
+public double winRate(){
+  double total = wins + draws + losses;
+  if(total!=0){
+    double winrate = (double) wins/total;
+    return winrate;
+  } else{
+    return 0.0;
+  }
+}
+
+}
