@@ -1,6 +1,6 @@
 import java.util.*;
 
-class Player{
+public class Player{
 
 private String playerName;
 private int wins;
