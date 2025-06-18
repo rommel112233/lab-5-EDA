@@ -1,1 +1,48 @@
+import java.util.*;
 
+public class Scoreboard {
+    private TreeMap<Integer, List<String>> winTree = new TreeMap<>();
+    private HashMap<String, Player> players = new HashMap<>();
+    private int playedGames = 0;
+
+    public void registerPlayer(String name) {
+        if (!players.containsKey(name)) {
+            players.put(name, new Player(name));
+        }
+    }
+
+    public boolean checkPlayer(String name) {
+        return players.containsKey(name);
+    }
+
+    public void addGameResult(String winner, String loser, boolean draw) {
+        if (draw) {
+            players.get(winner).addDraw();
+            players.get(loser).addDraw();
+        } else {
+            players.get(winner).addWin();
+            players.get(loser).addLoss();
+        }
+        playedGames++;
+
+        int newWins = players.get(winner).getWins();
+        winTree.computeIfAbsent(newWins, k -> new ArrayList<>()).add(winner);
+    }
+
+    public Player[] winRange(int lo, int hi) {
+        List<Player> result = new ArrayList<>();
+        for (int wins : winTree.subMap(lo, true, hi, true).keySet()) {
+            for (String name : winTree.get(wins)) {
+                result.add(players.get(name));
+            }
+        }
+        return result.toArray(new Player[0]);
+    }
+
+    public Player[] winSuccessor(int wins) {
+        Integer key = winTree.higherKey(wins);
+        if (key == null) return new Player[0];
+        List<String> names = winTree.get(key);
+        return names.stream().map(players::get).toArray(Player[]::new);
+    }
+}
