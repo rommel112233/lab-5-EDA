@@ -1,6 +1,7 @@
 import java.util.*;
 
-public class Scoreboard {
+public class Scoreboard{
+
     private TreeMap<Integer, List<String>> winTree = new TreeMap<>();
     private HashMap<String, Player> players = new HashMap<>();
     private int playedGames = 0;
