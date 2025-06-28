@@ -1,0 +1,106 @@
+import java.util.arrayList;
+import java.util.arrayList;
+
+public class BST<K extends Comparable<K>, X>{
+  private class Node{
+      k key;
+      List<X> valores;
+      Node izquierdo, derecho;
+
+      Node(K key, X valor){
+        this.key=key;
+        this.valores= new ArrayList<>();
+        this.valores.add(valor);
+      }
+}
+private Node raiz;
+
+public void insert(K key, X valor){
+  raiz = insert(raiz, key, valor);
+}
+private Node insert(Node node, K key, X valor){
+  if(node==null){
+    return new Node(key, valor);
+  }
+  int cmp = key.compareTo(node.key);
+
+  if(cmp<0){
+    node.izquierdo = insert(node.izquierdo, key, valor);
+  } else if(cmp>0){
+  node.derecho = insert(node.derecho, key, valor);
+  } else{
+  node.valores.add(valor);
+  }
+return node;
+}
+
+public List<x> search(K key){
+  Node node = search(raiz, key);
+  if(node==null){
+    return new ArrayList<>();
+  } else {
+    return node.valores;
+  }
+}
+private Node search(Node node, K key){
+  if(node==null) return null;
+
+  int cmp = key.compareTo(node.key);
+  if(cmp<0){
+  return search(node.izquierdo, key);
+  } else if(cmp>0){
+  return search(node.derecho, key);
+  } else{
+  return node;
+  }
+}
+
+public List<x> successor(K key){
+  node sig = null;
+  node actual = raiz;
+
+  while(actual != null){
+    int cmp = key.compareTo(actual.key);
+    if(cmp<0){
+      sig = actual;
+      actual = actual.izquierdo;
+    } else {
+        actual = actual.derecho;
+    }
+  }
+  if(sig==null){
+    return new ArrayList<>();
+  } else {
+    return sig.valores;
+  }
+}
+
+public void inOrderPrint(){
+  inOrderPrint(raiz);
+}
+private void inOrderPrint(Node node){
+  if(node == null) return;
+
+  inOrderPrint(node.izquierdo);
+  System.out.pintln("victorias: " + node.key + " -> " + node.valores);
+  inOrderPrint(node.derecho);
+}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
