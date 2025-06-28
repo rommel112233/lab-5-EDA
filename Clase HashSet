@@ -1,0 +1,72 @@
+import java.util.LinkedList;
+
+public class HashST(K, X){
+
+  private static class Pares<K, X>{
+    K key;
+    X valor;
+
+    Pares(K key, X valor){
+      this.key = key;
+      this.valor = valor;
+    }
+}
+
+private int capacidad = 16;
+private LinkedList<Pares<K, X>>[] tabla;
+
+public HashST(){
+  tabla = new LinkedList[capacidad];
+  for(int i=0; i<capacidad; i++){
+    tabla[i] = new LinkedList<>();
+  }
+}
+
+public void insert(K key, X valor){
+  int indice = hash(Key);
+  LinkedList<Pares<K, X>> lista = tabla[indice];
+
+  for(int i=0; i<lista.size(); i++){
+    Pares<K, X> par = lista.get(i);
+    if(par.key.equals(key)){
+      par.valor = valor;
+      return;
+      }
+  }
+  lista.add(new Pares<>(key, valor));
+}
+
+public X search(K key){
+  int indice = hash(key);
+  LinkedList<Pares<K, X>> lista = tabla[indice];
+
+  for(int i=0; i<lista.size(); i++){
+    Pares<K, X> par = lista.get(i);
+    if(par.key.equals(key)){
+      return par.valor;
+    }
+  }
+  return null;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
