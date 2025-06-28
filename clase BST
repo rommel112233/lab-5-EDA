@@ -1,9 +1,9 @@
-import java.util.arrayList;
-import java.util.arrayList;
+import java.util.ArrayList;
+import java.util.ArrayList;
 
 public class BST<K extends Comparable<K>, X>{
   private class Node{
-      k key;
+      K key;
       List<X> valores;
       Node izquierdo, derecho;
 
@@ -34,7 +34,7 @@ private Node insert(Node node, K key, X valor){
 return node;
 }
 
-public List<x> search(K key){
+public List<X> search(K key){
   Node node = search(raiz, key);
   if(node==null){
     return new ArrayList<>();
@@ -55,7 +55,7 @@ private Node search(Node node, K key){
   }
 }
 
-public List<x> successor(K key){
+public List<X> successor(K key){
   node sig = null;
   node actual = raiz;
 
