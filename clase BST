@@ -56,8 +56,8 @@ private Node search(Node node, K key){
 }
 
 public List<X> successor(K key){
-  node sig = null;
-  node actual = raiz;
+  Node sig = null;
+  Node actual = raiz;
 
   while(actual != null){
     int cmp = key.compareTo(actual.key);
