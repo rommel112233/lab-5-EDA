@@ -82,7 +82,7 @@ private void inOrderPrint(Node node){
   if(node == null) return;
 
   inOrderPrint(node.izquierdo);
-  System.out.pintln("victorias: " + node.key + " -> " + node.valores);
+  System.out.println("victorias: " + node.key + " -> " + node.valores);
   inOrderPrint(node.derecho);
 }
 
