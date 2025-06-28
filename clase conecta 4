@@ -1,0 +1,83 @@
+public class ConnectFour{
+    private char[][] grid;
+    private char currentSymbol;
+    public ConnectFour(){
+        grid = new char[7][6];
+        for(int col = 0; col< 7; col++){
+            for(int row=0; row<7;row++){
+                grid[col][row] = ' ';
+            }
+        }
+
+    }
+
+    public boolean makeMove(int z){
+
+        if(z<0 || z>7){return false;}
+        for(int row=0; row<7; row++){
+
+            if(grid[z][row] == ' '){
+                grid[z][row] = currentSymbol;
+                currentSymbol = (currentSymbol=='X') ? 'O' : 'X';
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String isGameOver() {
+        for (int col = 0; col < 7; col++) {
+            for (int row = 0; row < 6; row++) {
+                char symbol = grid[col][row];
+                if (symbol == ' ') continue;
+
+                if (col <= 3) {
+                    if (grid[col + 1][row] == symbol &&
+                            grid[col + 2][row] == symbol &&
+                            grid[col + 3][row] == symbol) {
+                        return String.valueOf(symbol);
+                    }
+                }
+
+                if (row <= 2) {
+                    if (grid[col][row + 1] == symbol &&
+                            grid[col][row + 2] == symbol &&
+                            grid[col][row + 3] == symbol) {
+                        return String.valueOf(symbol);
+                    }
+                }
+
+                if (col <= 3 && row <= 2) {
+                    if (grid[col + 1][row + 1] == symbol &&
+                            grid[col + 2][row + 2] == symbol &&
+                            grid[col + 3][row + 3] == symbol) {
+                        return String.valueOf(symbol);
+                    }
+                }
+
+                if (col >= 3 && row <= 2) {
+                    if (grid[col - 1][row + 1] == symbol &&
+                            grid[col - 2][row + 2] == symbol &&
+                            grid[col - 3][row + 3] == symbol) {
+                        return String.valueOf(symbol);
+                    }
+                }
+            }
+        }
+        
+        boolean isDraw = true;
+        for (int col = 0; col < 7; col++) {
+            if (grid[col][5] == ' ') {
+                isDraw = false;
+                break;
+            }
+        }
+
+        if (isDraw) return "Empate";
+
+        return ""; 
+    }
+
+
+
+}
