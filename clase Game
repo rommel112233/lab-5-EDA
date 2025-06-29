@@ -1,0 +1,66 @@
+import java.util.Scanner;
+
+public class Game {
+
+    private String playerNameA;
+    private String playerNameB;
+    private String winnerPlayerName;
+    private String status; 
+
+    private ConnectFour connectFour;
+    private Scoreboard scoreboard;
+
+    public Game(String playerA, String playerB, Scoreboard scoreboard) {
+        this.playerNameA = playerA;
+        this.playerNameB = playerB;
+        this.winnerPlayerName = "";
+        this.status = "IN_PROGRESS";
+        this.connectFour = new ConnectFour();
+        this.scoreboard = scoreboard;
+
+        scoreboard.registerPlayer(playerA);
+        scoreboard.registerPlayer(playerB);
+    }
+
+    public void play() {
+        Scanner scanner = new Scanner(System.in);
+        char currentSymbol = 'X';
+        String currentPlayer = playerNameA;
+
+        while (status.equals("IN_PROGRESS")) {
+            System.out.println("Turno de " + currentPlayer + " (" + currentSymbol + ")");
+            System.out.print("Ingrese columna (0-6): ");
+            int col = scanner.nextInt();
+
+            boolean success = connectFour.makeMove(col);
+            if (!success) {
+                System.out.println("Movimiento inválido. Intente de nuevo.");
+                continue;
+            }
+
+            String result = connectFour.isGameOver();
+            if (result.equals("X")) {
+                winnerPlayerName = playerNameA;
+                status = "VICTORY";
+            } else if (result.equals("O")) {
+                winnerPlayerName = playerNameB;
+                status = "VICTORY";
+            } else if (result.equals("Empate")) {
+                status = "DRAW";
+            } else {
+                // Continuar juego
+                currentSymbol = (currentSymbol == 'X') ? 'O' : 'X';
+                currentPlayer = (currentPlayer.equals(playerNameA)) ? playerNameB : playerNameA;
+            }
+        }
+
+        if (status.equals("VICTORY")) {
+            System.out.println("¡Ganador: " + winnerPlayerName + "!");
+            String loser = winnerPlayerName.equals(playerNameA) ? playerNameB : playerNameA;
+            scoreboard.addGameResult(winnerPlayerName, loser, false);
+        } else {
+            System.out.println("El juego terminó en empate.");
+            scoreboard.addGameResult(playerNameA, playerNameB, true);
+        }
+    }
+}
