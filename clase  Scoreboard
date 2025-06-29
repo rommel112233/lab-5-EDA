@@ -11,7 +11,33 @@ public class Scoreboard{
 }
 
 public void registerPlayer(String playerName){
-    if
+    if(!players.contains(playerName)){
+        Player nuevo = new Player(playerName);
+        players.insert(playerName, nuevo);
+    }
+}
+
+public boolean chechPlayers(String playerName){
+    return players.contains(playerName);
+}
+
+public void addGameResult(String winnerPlayerName, String looserPlayerName, boolean draw){
+    registerPlayer(winnerPlayerName);
+    registerPlayer(looserPlayerName);
+    Player winner = players.search(winnerPlayerName);
+    Player looser = players.search(looserPlayerName);
+
+    if(draw == true){
+        winner.addDraw();
+        looser.addDraw();
+    } else{ 
+        winner.addWin();
+        looser.addLoss();
+        winTree.insert(winner.getWins(), winnerPlayerName);
+    }
+    playedGames++;
+}
+
 
 
 
