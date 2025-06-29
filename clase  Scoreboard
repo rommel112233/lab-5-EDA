@@ -64,10 +64,9 @@ return arreglo;
 
 public Player[] winSuccessor(int wins){
     List<String> nombres = winTree.successor(wins);
-    if(sucesorWins == null){
+    if(nombres.size() == 0){
         return new Player[0];
     }
-    List<String> nombres = winTree.search(sucesorWins);
     ArrayList<Player> resultado = new ArrayList<Player>();
     for(int i=0; i<nombres.size(); i++){
         String nombreJugador = nombres.get(i);
