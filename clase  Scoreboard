@@ -8,7 +8,6 @@ public class Scoreboard{
         players = new HashST<>();
         playedGames = 0;
     }
-}
 
 public void addGameResult(String winnerPlayerName, String looserPlayerName, boolean draw){
     registerPlayer(winnerPlayerName);
@@ -25,7 +24,7 @@ public void addGameResult(String winnerPlayerName, String looserPlayerName, bool
             looser.addLoss();
             winTree.insert(winner.getWins(), winnerPlayerName);
         }
-    playedGames = playerGames + 1;
+    playedGames = playedGames + 1;
     }
 }
 
@@ -49,7 +48,7 @@ public Player[] winRange(int lo, int hi){
             while(j < nombres.size()){
                 String nombreJugador = nombres.get(j);
                 Player p = players.search(nombreJugador);
-                if(p != nul){
+                if(p != null){
                     resultado.add(p);
                 }
                 j = j+1;
@@ -57,14 +56,14 @@ public Player[] winRange(int lo, int hi){
             i = i+1;
         }
     Player[] arreglo = new Player[resultado.size()];
-    for(int k=0; k<resuldado.size(); k++){
+    for(int k=0; k<resultado.size(); k++){
         arreglo[k] = resultado.get(k);
     }
 return arreglo;
 }
 
 public Player[] winSuccessor(int wins){
-    Integer sucesorWins = winsTree. successorKey(wins);
+    List<String> nombres = winTree.successor(wins);
     if(sucesorWins == null){
         return new Player[0];
     }
@@ -84,7 +83,7 @@ public Player[] winSuccessor(int wins){
     return arreglo;
 }
 
-
+}
 
 
 
