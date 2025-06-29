@@ -1,12 +1,31 @@
 public class Scoreboard{
     private BST<Integer, String> winTree;
     private HashST<String, Player> players;
-    private int playerGames;
+    private int playedGames;
 
     public Scoreboard(){
         winTree = new BST<>();
-        player = new HashST<>();
+        players = new HashST<>();
         playedGames = 0;
+    }
+}
+
+public void addGameResult(String winnerPlayerName, String looserPlayerName, boolean draw){
+    registerPlayer(winnerPlayerName);
+    registerPlayer(looserPlayerName);
+    Player winner = players.search(winnerPlayerName);
+    Player looser = players.search(looserPlayerName);
+
+    if(winner != null && looser != null){
+        if(draw == true){
+            winner.addDraw();
+            looser.addDraw();
+        } else{ 
+            winner.addWin();
+            looser.addLoss();
+            winTree.insert(winner.getWins(), winnerPlayerName);
+        }
+    playedGames = playerGames + 1;
     }
 }
 
@@ -17,26 +36,37 @@ public void registerPlayer(String playerName){
     }
 }
 
-public boolean chechPlayers(String playerName){
+public boolean checkPlayer(String playerName){
     return players.contains(playerName);
 }
 
-public void addGameResult(String winnerPlayerName, String looserPlayerName, boolean draw){
-    registerPlayer(winnerPlayerName);
-    registerPlayer(looserPlayerName);
-    Player winner = players.search(winnerPlayerName);
-    Player looser = players.search(looserPlayerName);
-
-    if(draw == true){
-        winner.addDraw();
-        looser.addDraw();
-    } else{ 
-        winner.addWin();
-        looser.addLoss();
-        winTree.insert(winner.getWins(), winnerPlayerName);
+public Player[] winRange(int lo, int hi){
+    ArrayList<Player> resultado = new ArrayList<Player>();
+    int i = lo;
+        while(i <=hi){
+            List<String> nombres = winTree.search(i);
+            int j = 0;
+            while(j < nombres.size()){
+                String nombreJugador = nombres.get(j);
+                Player p = players.search(nombreJugador);
+                if(p != nul){
+                    resultado.add(p);
+                }
+                j = j+1;
+            }
+            i = i+1;
+        }
+    Player[] arreglo = new Player[resultado.size()];
+    for(int k=0; k<resuldado.size(); k++){
+        arreglo[k] = resultado.get(k);
     }
-    playedGames++;
+return arreglo;
 }
+
+
+
+
+
 
 
 
