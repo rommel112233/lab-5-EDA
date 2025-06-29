@@ -1,6 +1,6 @@
 import java.util.LinkedList;
 
-public class HashST(K, X){
+public class HashST<K, X>{
 
   private static class Pares<K, X>{
     K key;
@@ -23,7 +23,7 @@ public HashST(){
 }
 
 public void insert(K key, X valor){
-  int indice = hash(Key);
+  int indice = hash(key);
   LinkedList<Pares<K, X>> lista = tabla[indice];
 
   for(int i=0; i<lista.size(); i++){
@@ -63,7 +63,7 @@ public boolean contains(K key){
 }
 
 private int hash(K key){
-  int hashcode = key.hashcode();
+  int hashcode = key.hashCode();
   return Math.abs(hashcode) % capacidad;
 }
 }
