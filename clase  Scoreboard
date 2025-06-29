@@ -1,203 +1,23 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Collections; // Para Collections.emptyList()
+public class Scoreboard{
+    private BST<Integer, String> winTree;
+    private HashST<String, Player> players;
+    private int playerGames;
 
-/**
- * Interfaz placeholder para tu implementación de BST.
- * Deberás reemplazarla con tu clase BST real y sus métodos.
- * Asume que el BST ahora almacena una Lista de Strings como valor.
- */
-interface MyBST<Key extends Comparable<Key>, Value> {
-    void put(Key key, Value val); // Si el valor es una lista, esto podría añadir/actualizar
-    Value get(Key key); // Retorna el valor (una lista de nombres) asociado a la clave
-    void delete(Key key); // Elimina una clave y su valor
-    
-    // Métodos adicionales para el Scoreboard
-    Iterable<Value> rangeSearch(Key lo, Key hi); // Para winRange, retorna un iterable de List<String>
-    Key ceiling(Key key); // Retorna la clave más pequeña >= key
-}
-
-/**
- * Interfaz placeholder para tu implementación de HashST.
- * Deberás reemplazarla con tu clase HashST real y sus métodos.
- */
-interface MyHashST<Key, Value> {
-    void put(Key key, Value val);
-    Value get(Key key);
-    boolean contains(Key key); // Verifica si la clave existe
-}
-
-
-public class Scoreboard {
-
-    // winTree ahora almacena una lista de nombres (String) para cada conteo de victorias (Integer).
-    private MyBST<Integer, List<String>> winTree;
-    private MyHashST<String, Player> players;
-    private int playedGames;
-
-    /**
-     * Constructor de la clase Scoreboard.
-     * Inyecta las implementaciones de BST y HashST.
-     * @param bstImpl La implementación de BST a usar.
-     * @param hashStImpl La implementación de HashST a usar.
-     */
-    public Scoreboard(MyBST<Integer, List<String>> bstImpl, MyHashST<String, Player> hashStImpl) {
-        this.winTree = bstImpl;
-        this.players = hashStImpl;
-        this.playedGames = 0;
-    }
-
-    /**
-     * Registra el resultado de una partida.
-     * Actualiza las estadísticas de los jugadores y el winTree.
-     * @param winnerPlayerName Nombre del jugador ganador.
-     * @param looserPlayerName Nombre del jugador perdedor.
-     * @param draw True si la partida fue un empate, false si hubo un ganador/perdedor.
-     */
-    public void addGameResult(String winnerPlayerName, String looserPlayerName, boolean draw) {
-        Player winner = players.get(winnerPlayerName);
-        Player looser = players.get(looserPlayerName);
-
-        if (winner == null || looser == null) {
-            System.err.println("Error: Uno o ambos jugadores no están registrados para actualizar el resultado.");
-            return;
-        }
-
-        // Obtener el número de victorias antes de la actualización
-        int oldWinnerWins = winner.getWins();
-        int oldLooserWins = looser.getWins();
-
-        if (draw) {
-            winner.addDraw();
-            looser.addDraw();
-        } else {
-            winner.addWin();
-            looser.addLoss();
-        }
-        playedGames++;
-
-        // --- Actualizar winTree ---
-        // 1. Remover el nombre del jugador de su antigua cantidad de victorias en el winTree.
-        // Solo si la cantidad de victorias ha cambiado.
-        if (oldWinnerWins != winner.getWins()) {
-            removePlayerFromWinTree(oldWinnerWins, winnerPlayerName);
-        }
-        if (oldLooserWins != looser.getWins()) {
-            removePlayerFromWinTree(oldLooserWins, looserPlayerName);
-        }
-
-        // 2. Añadir el nombre del jugador a su nueva cantidad de victorias en el winTree.
-        addPlayerToWinTree(winner.getWins(), winnerPlayerName);
-        addPlayerToWinTree(looser.getWins(), looserPlayerName);
-    }
-
-    /**
-     * Método auxiliar para remover un jugador de la lista asociada a una cantidad de victorias en el winTree.
-     */
-    private void removePlayerFromWinTree(int wins, String playerName) {
-        List<String> names = winTree.get(wins);
-        if (names != null) {
-            names.remove(playerName);
-            if (names.isEmpty()) {
-                winTree.delete(wins); // Eliminar la clave si ya no hay jugadores con esa cantidad de victorias
-            } else {
-                winTree.put(wins, names); // Actualizar la lista (puede no ser necesario si 'names' es una referencia directa)
-            }
-        }
-    }
-
-    /**
-     * Método auxiliar para añadir un jugador a la lista asociada a una cantidad de victorias en el winTree.
-     */
-    private void addPlayerToWinTree(int wins, String playerName) {
-        List<String> names = winTree.get(wins);
-        if (names == null) {
-            names = new ArrayList<>();
-        }
-        if (!names.contains(playerName)) { // Evitar duplicados en la lista si ya estaba ahí por algún motivo
-            names.add(playerName);
-        }
-        winTree.put(wins, names);
-    }
-
-
-    /**
-     * Registra un nuevo jugador en el sistema.
-     * @param playerName Nombre del jugador a registrar.
-     */
-    public void registerPlayer(String playerName) {
-        if (!players.contains(playerName)) {
-            Player newPlayer = new Player(playerName);
-            players.put(playerName, newPlayer);
-            // Al registrar, el jugador tiene 0 victorias. Añadirlo al winTree.
-            addPlayerToWinTree(0, playerName);
-        }
-    }
-
-    /**
-     * Verifica si un jugador está registrado en el sistema.
-     * @param playerName Nombre del jugador a verificar.
-     * @return true si el jugador está registrado, false en caso contrario.
-     */
-    public boolean checkPlayer(String playerName) {
-        return players.contains(playerName); // Asume que HashST tiene un método contains
-    }
-
-    /**
-     * Retorna un arreglo de jugadores con victorias en el rango [lo, hi].
-     * @param lo Límite inferior inclusivo de victorias.
-     * @param hi Límite superior inclusivo de victorias.
-     * @return Arreglo de objetos Player que cumplen la condición.
-     */
-    public Player[] winRange(int lo, int hi) {
-        List<Player> resultPlayers = new ArrayList<>();
-        Iterable<List<String>> listOfNamesLists = winTree.rangeSearch(lo, hi); // Asume que rangeSearch retorna Iterable de List<String>
-
-        if (listOfNamesLists != null) {
-            for (List<String> names : listOfNamesLists) {
-                if (names != null) {
-                    for (String name : names) {
-                        Player p = players.get(name);
-                        if (p != null) {
-                            resultPlayers.add(p);
-                        }
-                    }
-                }
-            }
-        }
-        return resultPlayers.toArray(new Player[0]);
-    }
-
-    /**
-     * Retorna un arreglo de jugadores con el número de victorias mayor más cercano al valor especificado.
-     * Si no existe sucesor, retorna un arreglo vacío.
-     * @param wins Número de victorias a buscar el sucesor.
-     * @return Arreglo de objetos Player.
-     */
-    public Player[] winSuccessor(int wins) {
-        List<Player> resultPlayers = new ArrayList<>();
-        // Queremos el mayor más cercano, no igual, por eso wins + 1.
-        Integer successorWins = winTree.ceiling(wins + 1);
-
-        if (successorWins != null) {
-            List<String> namesWithSuccessorWins = winTree.get(successorWins);
-            if (namesWithSuccessorWins != null) {
-                for (String name : namesWithSuccessorWins) {
-                    Player p = players.get(name);
-                    if (p != null) {
-                        resultPlayers.add(p);
-                    }
-                }
-            }
-        }
-        return resultPlayers.toArray(new Player[0]);
-    }
-
-    /**
-     * Retorna el número total de partidas jugadas.
-     * @return Número de partidas jugadas.
-     */
-    public int getPlayedGames() {
-        return playedGames;
+    public Scoreboard(){
+        winTree = new BST<>();
+        player = new HashST<>();
+        playedGames = 0;
     }
 }
+
+public void registerPlayer(String playerName){
+    if
+
+
+
+
+
+
+
+
+
