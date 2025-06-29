@@ -55,9 +55,18 @@ public boolean contains(K key){
 
   for(int i=0; i<lista.size(); i++){
     Pares<K, X> par= lista.get(i);
-    if(par.key.equals
+    if(par.key.equals(key)){
+      return true;
+    }
+  }
+  return false;
+}
 
-
+private int hash(K key){
+  int hashcode = key.hashcode();
+  return Math.abs(hashcode) % capacidad;
+}
+}
 
 
 
