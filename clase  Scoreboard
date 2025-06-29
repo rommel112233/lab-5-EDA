@@ -81,7 +81,6 @@ public Player[] winSuccessor(int wins){
     }
     return arreglo;
 }
-
 }
 
 
