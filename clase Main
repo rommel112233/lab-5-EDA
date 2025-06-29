@@ -1,0 +1,41 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ConnectFour game = new ConnectFour();
+        String gameOver;
+        int turn = 1;
+
+        System.out.println("¡Bienvenidos a Conecta 4!");
+        System.out.println("Jugador 1 = X | Jugador 2 = O");
+
+        while (true) {
+            game.printGrid();
+            System.out.print("Turno del Jugador " + ((turn % 2 == 1) ? "1 (X)" : "2 (O)") + " - Ingresa columna (0-6): ");
+            int column;
+            try {
+                column = scanner.nextInt();
+            } catch (Exception e) {
+                System.out.println("Entrada inválida. Intenta de nuevo.");
+                scanner.next(); // limpiar buffer
+                continue;
+            }
+
+            if (!game.makeMove(column)) {
+                System.out.println("Movimiento inválido. Intenta de nuevo.");
+                continue;
+            }
+
+            gameOver = game.isGameOver();
+            if (!gameOver.equals("No")) {
+                game.printGrid();
+                System.out.println("Juego terminado. Ganador: " + gameOver);
+                break;
+            }
+
+            turn++;
+        }
+        scanner.close();
+    }
+}
